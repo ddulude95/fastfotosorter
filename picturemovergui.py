@@ -1,5 +1,5 @@
 #Author: Devin Dulude
-#Version: 1.0
+#Version: 1.1 (cleaned up code and comments)
 #About: Python program created to use specifically with Fastfoto software to move
 # the non-enhanced versions of your scanned photos to their own folder if you chose to keep them.
 # This way you don't have duplicates in the folder when viewing the photos.
@@ -14,7 +14,7 @@ tocopy = []
 debug = False
 
 
-# asks user to pick directory and checks for Originals folder. Creates it if not exist
+# prompts user to pick directory and adds it to the field
 def handleDirectory():
     global sourcedir
     sourcedir = askdirectory()
@@ -23,6 +23,8 @@ def handleDirectory():
     dir.delete(0, 'end')
     dir.insert(0, sourcedir)
 
+# makes sure the path is valid and exists. Also makes sure we arent in a folder called Originals. Then checks for existing Originals
+# folder and creates it if not exists.
 def checkPath():
     global originalsPath, sourcedir
     sourcedir = dir.get()
@@ -52,29 +54,28 @@ def checkPath():
                 print("Originals folder already exists, continuing")
             return True
 
-# makes sure to only handle .jpg files and adds originalsPath to a tocopy list. Returns the tocopy list
+# makes sure to only handle .jpg files and adds originalsPath to a tocopy list.
 def sortPics():
     jpgs = []
     global tocopy
 
+    # grab only jpgs
     for file in os.listdir(sourcedir):
         if str(file).lower().endswith('.jpg'):
             jpgs.append(file)
 
+    # go through jpgs and filter out which to move
     for picture in jpgs:
-        if not (str(picture).endswith('_a.jpg')):     #move anything that doesnt end with _a, essentially moveBside == true
-            if moveBside.get() == 0: #only go in here if we want to keep B sides in source folder
-                if not (str(picture).endswith('_b.jpg')): #if it doesnt end in _b, add it to the queue. else, do nothing and continue with the looop
-                    tocopy.append(picture)
-                    if debug:
-                        print("queueing " + str(picture))
-                    continue
-                else:
-                    continue
-                
-            tocopy.append(picture)
-            if debug:
-                print("queueing " + str(picture))
+        if (str(picture).endswith('_a.jpg')):
+            continue # we never move anything that ends with _a, so we continue 
+
+        if moveBside.get() == 0 and str(picture).endswith('_b.jpg'): # if not moving B side & ends with _b, dont add to queue and continue
+            continue
+
+        # finally, add this pic to queue
+        tocopy.append(picture)
+        if debug:
+            print("queueing " + str(picture))
     
 
 def movePics():
@@ -89,21 +90,28 @@ def cleanup():
 
 def main():
     global tocopy
-    if dir.get() != "":
-        if checkPath():
-            sortPics()
-            if len(tocopy) != 0:
-                movePics()
-                infomsg = "Moved " + str(len(tocopy))  + " pictures"
-                print(infomsg)
-                tk.messagebox.showinfo(title="Originals Photo Sorter", message=infomsg)
-                
-            else:
-                print("No pictures to move.")
-                tk.messagebox.showinfo(title="Originals Photo Sorter", message="No pictures to move.")
-            cleanup()
+    
+    if dir.get() == "":
+        tk.messagebox.showerror(title="Originals Photo Sorter", message="Directory cannot be blank")    
+        return    
+    if not checkPath():
+        # checkPath will throw the error, so we simply return in here.
+        return
+    
+    sortPics()
+    
+    if len(tocopy) != 0:
+        movePics()
+        infomsg = "Moved " + str(len(tocopy))  + " pictures"
+        print(infomsg)
+        tk.messagebox.showinfo(title="Originals Photo Sorter", message=infomsg)
+        
     else:
-        tk.messagebox.showerror(title="Originals Photo Sorter", message="Directory cannot be blank")
+        print("No pictures to move.")
+        tk.messagebox.showinfo(title="Originals Photo Sorter", message="No pictures to move.")
+        
+    cleanup()
+        
 
 #def guimain():
 print("Originals Photo Sorter by Devin Dulude")
