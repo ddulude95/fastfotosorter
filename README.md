@@ -1,6 +1,6 @@
 # Fastfoto Sorter
 GUI python script to move original photos from enhanced ones - used with Epson Fastfoto.
-![Fastfoto sorter gui](./fastfotosorter.png?raw=true "FastFotoSorter")
+![Fastfoto sorter gui](./fastfotosorter.png)
 
 # How to use
 Only written to work with Windows. Make sure you have Python 3 installed, download picturemovergui.py and double click to run it. Click Browse to browse to your directory of photos, or paste in a directory. Choose to move reverse sides of photos or not. Press Go. The command prompt will display console output. 
