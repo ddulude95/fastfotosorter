@@ -1,2 +1,5 @@
-# fastfotosorter
-GUI python script to move original photos from enhanced ones - used with Epson Fastfoto
+# Fastfoto Sorter
+GUI python script to move original photos from enhanced ones - used with Epson Fastfoto.
+
+# How it works
+Fastfoto can generate enhanced versions of your photos as well as scan the back sides. These files get appened a suffix with _a and _b respectively. This program, given a directory of .jpgs, will automatically move the original copies to their own folder called "Originals" and the user can choose to move the B sides or not.
