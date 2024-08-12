@@ -1,5 +1,5 @@
 #Author: Devin Dulude
-#Version: 1.2 (Added renamer feature)
+#Version: 1.3
 #About: Python program created to use specifically with Fastfoto software to move
 # the non-enhanced versions of your scanned photos to their own folder if you chose to keep them.
 # This way you don't have duplicates in the folder when viewing the photos. Also can batch rename photos.
@@ -112,10 +112,15 @@ def startRename():
         # checkPath will throw the error, so we simply return in here.
         return
     
-    if whatfield.get() == "" or withfield.get() == "":
-        tk.messagebox.showerror(title=TITLE, message="Replace fields cant be blank!")
+    if whatfield.get() == "":
+        tk.messagebox.showerror(title=TITLE, message="'Replace what' field cant be blank!")
         return
-      
+    
+    if withfield.get() == "":
+        okay = tk.messagebox.askokcancel(title=TITLE, message="'Replace with' field is empty. This will erase " + str(whatfield.get()) + " from the filename. This cannot be undone.\n\nContinue?")
+        if not okay:
+            return
+
     numRenamed = sortPics(True)
 
     if numRenamed != 0:
